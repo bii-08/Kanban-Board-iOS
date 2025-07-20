@@ -25,8 +25,9 @@ struct KanbanBoardApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BoardView()
+//            ContentView()
         }
-        .modelContainer(sharedModelContainer)
+//        .modelContainer(sharedModelContainer)
     }
 }

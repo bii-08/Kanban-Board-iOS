@@ -9,51 +9,47 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @State private var droppedText: String?
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
+        HStack(spacing: 60) {
+            DraggableCard(card: Card2(title: "This is a task"))
+            DropZone()
         }
+        .padding(40)
+//        HStack(spacing: 40) {
+//                    Text("🟦 Drag me")
+//                        .padding()
+//                        .background(Color.blue)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(8)
+//                        .draggable("This is dragged text") // ← Using a raw String
+//
+//                    VStack {
+//                        if let droppedText {
+//                            Text("Dropped: \(droppedText)")
+//                                .bold()
+//                        } else {
+//                            Text("Drop Here")
+//                                .foregroundColor(.gray)
+//                        }
+//                    }
+//                    .frame(width: 200, height: 200)
+//                    .background(Color.green.opacity(0.2))
+//                    .cornerRadius(12)
+//                    .dropDestination(for: String.self, action: { items, _ in
+//                        print("✅ Dropped item: \(items.first ?? "<empty>")")
+//                        droppedText = items.first
+//                        return true
+//                    }, isTargeted: { targeted in
+//                        print("🎯 Is targeted: \(targeted)")
+//                    })
+//                }
+//                .padding(40)
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
-    }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+//        .modelContainer(for: Item.self, inMemory: true)
 }
