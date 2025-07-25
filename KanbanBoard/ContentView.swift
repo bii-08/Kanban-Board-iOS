@@ -9,13 +9,17 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @State private var droppedText: String?
+    
     var body: some View {
-        HStack(spacing: 60) {
-            DraggableCard(card: Card2(title: "This is a task"))
-            DropZone()
-        }
-        .padding(40)
+        Text("")
+    }
+//    @State private var droppedText: String?
+//    var body: some View {
+//        HStack(spacing: 60) {
+//            DraggableCard(card: Card2(title: "This is a task"))
+//            DropZone()
+//        }
+//        .padding(40)
 //        HStack(spacing: 40) {
 //                    Text("🟦 Drag me")
 //                        .padding()
@@ -45,7 +49,7 @@ struct ContentView: View {
 //                    })
 //                }
 //                .padding(40)
-    }
+//    }
 
 }
 

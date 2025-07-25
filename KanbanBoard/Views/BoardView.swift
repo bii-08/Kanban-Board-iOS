@@ -6,13 +6,10 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct BoardView: View {
-    typealias Columns = [ColumnType: [Card]]
-    
-    @State var columns: Columns = [:]
-    @State var isTargeted: Bool = false
-    
+    @Environment(\.modelContext) private var modelContext
     @State private var draggingCardID: UUID?
     
     var body: some View {
@@ -23,25 +20,39 @@ struct BoardView: View {
                 .fontWeight(.bold)
                 .foregroundStyle(.white)
             HStack {
-                ForEach(ColumnType.allCases, id: \.self) { column in
-                    ColumnView(colTitle: column.title, columnType: column, columns: $columns, draggingCardID: $draggingCardID)
-                        .cornerRadius(5)
-                }
+                TodoColumnView(draggingCardID: $draggingCardID)
+                    .cornerRadius(5)
+                InProgressColumnView(draggingCardID: $draggingCardID)
+                    .cornerRadius(5)
+                InReviewColumnView(draggingCardID: $draggingCardID)
+                    .cornerRadius(5)
+                DoneColumnView(draggingCardID: $draggingCardID)
+                    .cornerRadius(5)
             }
+        }
+        .onAppear {
+            // MARK: Testing
+            //deleteAllCards()
         }
         .padding(50)
         .background(Color.boardBackground)
     }
+    
+    private func deleteAllCards() {
+        let descriptor = FetchDescriptor<Card>()
+        do {
+            let allCards = try modelContext.fetch(descriptor)
+            for card in allCards {
+                modelContext.delete(card)
+            }
+            try modelContext.save()
+            print("🗑️ All cards deleted on launch")
+        } catch {
+            print("❌ Failed to delete all cards:", error)
+        }
+    }
 }
 
 #Preview {
-    BoardView(columns: [
-        .todo: [Card(title: "Create new iOS project", tag: "Dev", dueDate: Date.now),
-                Card(title: "Create new iOS project", tag: "Dev", dueDate: Date.now)],
-        .inProgress: [Card(title: "Finish Kanban web app using SwiftUI Finish Kanban web app using SwiftUI Finish Kanban web app using SwiftUI Kanban web app using SwiftUI Finish Kanban web app using SwiftUI", tag: "Development", dueDate: Date.now),
-                      Card(title: "Finish Kanban web app using SwiftUI Finish Kanban web app using SwiftUI Finish Kanban web app using SwiftUI Kanban web app using SwiftUI Finish Kanban web app using SwiftUI", tag: "Development", dueDate: Date.now),
-                      Card(title: "Finish Kanban web app using SwiftUI Finish Kanban web app using SwiftUI Finish Kanban web app using SwiftUI Kanban web app using SwiftUI Finish Kanban web app using SwiftUI", tag: "Development", dueDate: Date.now)],
-        .inReview: [Card(title: "Add", tag: "Design", dueDate: Date.now)],
-        .done: [Card(title: "Add Tag color selection on Task cards", tag: "Design", dueDate: Date.now)]
-    ])
+    BoardView()
 }

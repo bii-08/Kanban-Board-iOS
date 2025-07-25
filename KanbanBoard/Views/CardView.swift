@@ -58,12 +58,9 @@ struct CardView: View {
         .background(isDragging ?? false ? Color.cardDraggingBackground : Color.white)
         .border(isDragging ?? false ? Color.black : Color.clear)
         .cornerRadius(5)
-        
-        
     }
 }
 
 #Preview {
-    CardView(card: Card(title: "Create new iOS project",tag: "Development", dueDate: Date()))
-    
+    CardView(card: Card(title: "Create new iOS project",tag: "Development", dueDate: Date(), column: ColumnType.done))
 }

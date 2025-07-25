@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct DraggableCard: View {
     let card: Card2
 
@@ -50,3 +50,4 @@ struct DropZone: View {
         })
     }
 }
+ */

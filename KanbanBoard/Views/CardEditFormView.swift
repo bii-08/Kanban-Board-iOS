@@ -48,5 +48,5 @@ struct CardEditFormView: View {
 }
 
 #Preview {
-    CardEditFormView(editingCard: Card(id: UUID(), title: "Test", dueDate: Date()), onSave: { _ in })
+    CardEditFormView(editingCard: Card(id: UUID(), title: "Test", dueDate: Date(), column: ColumnType.todo), onSave: { _ in })
 }

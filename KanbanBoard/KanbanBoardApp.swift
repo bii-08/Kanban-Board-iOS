@@ -10,24 +10,24 @@ import SwiftData
 
 @main
 struct KanbanBoardApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
+    let container: ModelContainer
+    
+    init() {
         do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+            
+            container = try ModelContainer(for: Card.self)
         } catch {
-            fatalError("Could not create ModelContainer: \(error)")
+            fatalError("Could not initialize ModelContainer")
         }
-    }()
+        
+        // print the SQL file's path (SwiftData)
+        print(URL.applicationSupportDirectory.path(percentEncoded: false))
+    }
 
     var body: some Scene {
         WindowGroup {
             BoardView()
-//            ContentView()
         }
-//        .modelContainer(sharedModelContainer)
+        .modelContainer(container)
     }
 }
