@@ -28,11 +28,17 @@ struct BoardView: View {
                     .cornerRadius(5)
                 DoneColumnView(draggingCardID: $draggingCardID)
                     .cornerRadius(5)
+                
+                VStack {
+                    TrashAreaView()
+                        .cornerRadius(5)
+                    Spacer()
+                }
             }
         }
         .onAppear {
             // MARK: Testing
-            //deleteAllCards()
+//            deleteAllCards()
         }
         .padding(50)
         .background(Color.boardBackground)

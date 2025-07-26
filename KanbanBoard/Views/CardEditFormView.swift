@@ -6,25 +6,45 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CardEditFormView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) private var modelContext
     
-    @State var editingCard: Card
-    let onSave: (Card) -> Void
+    let originalCard: Card
+    @State var title: String
+    @State var tag: String?
+    @State var dueDate: Date?
+    let onSave: (String, String?, Date?, Color) -> Void
+    
+    @State private var showColorPicker = false
+    @State private var selectedColor: Color = .blue
+    
+    init(originalCard: Card, onSave: @escaping (String, String?, Date?, Color) -> Void) {
+        self.originalCard = originalCard
+        _title = State(initialValue: originalCard.title)
+        _tag = State(initialValue: originalCard.tag ?? "")
+        _dueDate = State(initialValue: originalCard.dueDate)
+        _selectedColor = State(initialValue: originalCard.red != 0.0 && originalCard.green != 0.0 && originalCard.blue != 0.0 ? Color(red: originalCard.red, green: originalCard.green, blue: originalCard.blue) : .blue)
+        self.onSave = onSave
+    }
     
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Title", text: $editingCard.title)
+                    TextField("Title", text: $title)
                     TextField("Tag", text: Binding(
-                        get: { editingCard.tag ?? "" },
-                        set: { editingCard.tag = $0.isEmpty ? nil : $0 }
+                        get: { tag ?? "" },
+                        set: { tag = $0.isEmpty ? nil : $0 }
                     ))
+                    
+                    ColorPicker("Tag color", selection: $selectedColor)
+                    
                     DatePicker("Due Date", selection: Binding(
-                        get: { editingCard.dueDate ?? Date() },
-                        set: { editingCard.dueDate = $0 }
+                        get: { dueDate ?? Date() },
+                        set: { dueDate = $0 }
                     ), displayedComponents: [.date])
                 }
             }
@@ -33,7 +53,9 @@ struct CardEditFormView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        onSave(editingCard)
+                        if hasChanged() {
+                            onSave(title, tag, dueDate, selectedColor)
+                        }
                         dismiss()
                     }
                 }
@@ -45,8 +67,17 @@ struct CardEditFormView: View {
             }
         }
     }
+    
+    private func hasChanged() -> Bool {
+        
+        if originalCard.title != title || originalCard.dueDate != dueDate || originalCard.tagColor != selectedColor ||
+            originalCard.tag != tag {
+            return true
+        }
+        return false
+    }
 }
 
 #Preview {
-    CardEditFormView(editingCard: Card(id: UUID(), title: "Test", dueDate: Date(), column: ColumnType.todo), onSave: { _ in })
+    CardEditFormView(originalCard: Card(id: UUID(), title: "Test", dueDate: Date(), column: ColumnType.todo), onSave: { _,_,_,_ in })
 }

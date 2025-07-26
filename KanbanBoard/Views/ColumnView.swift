@@ -17,13 +17,23 @@ struct ColumnView: View {
     let columnType: ColumnType
     @Binding var draggingCardID: UUID?
     
-    @State private var cards: [Card] = []
+    @Query private var cards: [Card]
     
     // MARK: - Local States
     @State var inputText = ""
     @State private var isTargeted = false
     @State private var selectedCard: Card? = nil
     @State private var isShowingEditForm: Bool = false
+    
+    init(colTitle: String, columnType: ColumnType, draggingCardID: Binding<UUID?>) {
+        self.colTitle = colTitle
+        self.columnType = columnType
+        _draggingCardID = draggingCardID
+        _cards = Query(
+            filter: #Predicate<Card> { card in
+            card.column == columnType.rawValue },
+            sort: \Card.order, order: .forward)
+    }
     
     var body: some View {
         
@@ -37,9 +47,6 @@ struct ColumnView: View {
             // MARK: Add cards session
             addCardSession
         }
-        .onChange(of: draggingCardID) { _,_ in
-            fetchCards()
-        }
         .padding(.horizontal, 13)
         .padding(.vertical, 30)
         .scaleEffect(isTargeted ? 1.05 : 1)
@@ -51,22 +58,22 @@ struct ColumnView: View {
             isTargeted = targeted
         })
         .sheet(item: $selectedCard) { card in
-            CardEditFormView(editingCard: card) { updatedCard in
-                // TODO: Saving logic here
+            CardEditFormView(originalCard: card) { newTitle, newTag, newDueDate, newTagColor in
+                let tagColor = newTagColor.components
+                    card.red = tagColor.red
+                    card.blue = tagColor.blue
+                    card.green = tagColor.green
+                    card.alpha = tagColor.opacity
+                
+                card.title = newTitle
+                card.tag = newTag
+                card.dueDate = newDueDate
+                do {
+                    try modelContext.save()
+                } catch {
+                    print("Error saving updated card: \(error)")
+                }
             }
-        }
-    }
-    
-    private func fetchCards() {
-        let descriptor = FetchDescriptor<Card>(
-            predicate: #Predicate { $0.column == columnType.rawValue },
-            sortBy: [SortDescriptor(\.order)]
-        )
-        
-        do {
-            cards = try modelContext.fetch(descriptor)
-        } catch {
-            print("❌ Failed to fetch cards:", error)
         }
     }
     
@@ -74,11 +81,11 @@ struct ColumnView: View {
         guard !inputText.isEmpty else { return }
         let newCard = Card(title: inputText, column: columnType)
         newCard.order = cards.count
-        modelContext.insert(newCard)
-        fetchCards()
+        withAnimation {
+            modelContext.insert(newCard)
+        }
         inputText = ""
     }
-    
     
     private func handleDrop(_ droppedCards: [Card], _ targetCard: Card) -> Bool {
         guard
@@ -90,18 +97,15 @@ struct ColumnView: View {
             return false
         }
         
-        // Get cards sorted by order (fresh snapshot)
-        let sortedCards = cards.sorted { $0.order < $1.order }
-        
         guard
-            let sourceIndex = sortedCards.firstIndex(where: { $0.id == droppedCard.id }),
-            let destinationIndex = sortedCards.firstIndex(where: { $0.id == targetCard.id })
+            let sourceIndex = cards.firstIndex(where: { $0.id == droppedCard.id }),
+            let destinationIndex = cards.firstIndex(where: { $0.id == targetCard.id })
         else {
             return false
         }
         
         // Swap positions in memory
-        var swapped = sortedCards
+        var swapped = cards
         swapped.swapAt(sourceIndex, destinationIndex)
         
         // Reassign only the 2 involved cards
@@ -114,7 +118,6 @@ struct ColumnView: View {
             
             do {
                 try modelContext.save()
-                fetchCards()
                 print("🔁 Swapped \(cardA.title) and \(cardB.title) at \(sourceIndex) ↔︎ \(destinationIndex)")
                 draggingCardID = nil
                 return true
@@ -144,13 +147,9 @@ struct ColumnView: View {
                 print("🔍 Card not found in store.")
             }
             
-            //            droppedCard.column = columnType.rawValue
-            //            droppedCard.order = cards.count
-            
             do {
                 try modelContext.save()
                 print("✅ Saved!")
-                fetchCards()
                 draggingCardID = nil
                 return true
             } catch {
@@ -262,6 +261,7 @@ struct DoneColumnView: View {
         ColumnView(colTitle: "Done", columnType: .done, draggingCardID: $draggingCardID)
     }
 }
+
 
 #Preview {
     ColumnView(colTitle: "Todo", columnType: .todo, draggingCardID: .constant(nil))

@@ -17,11 +17,13 @@ struct CardView: View {
         
         VStack(alignment: .leading) {
             if let tag = card.tag {
-                Text("#\(tag)")
-                    .padding(3)
-                    .foregroundStyle(.white)
-                    .background(Color.blue)
-                    .cornerRadius(5)
+                if !tag.isEmpty {
+                    Text("#\(tag)")
+                        .padding(3)
+                        .foregroundStyle(.white)
+                        .background(card.tagColor)
+                        .cornerRadius(5)
+                }
             }
             
             Text(card.title)
@@ -36,7 +38,7 @@ struct CardView: View {
                         .foregroundStyle(.black)
                 }
                 .padding(3)
-                .background(Color.yellow)
+                .background(Color.cardTaskDueDateBg)
                 .cornerRadius(5)
             }
         }
