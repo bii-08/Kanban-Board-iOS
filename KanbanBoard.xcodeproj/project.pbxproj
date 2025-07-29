@@ -15,28 +15,16 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				README.md,
 			);
 			target = 781956602E20D0A5008B6115 /* KanbanBoard */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		785BFC792E37731600F1B97A /* Exceptions for "KanbanBoard" folder in "Compile Sources" phase from "KanbanBoard" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 7819565D2E20D0A5008B6115 /* Sources */;
-			membershipExceptions = (
-				README.md,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		781956632E20D0A5008B6115 /* KanbanBoard */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				781956812E24DA2A008B6115 /* Exceptions for "KanbanBoard" folder in "KanbanBoard" target */,
-				785BFC792E37731600F1B97A /* Exceptions for "KanbanBoard" folder in "Compile Sources" phase from "KanbanBoard" target */,
 			);
 			path = KanbanBoard;
 			sourceTree = "<group>";

@@ -41,9 +41,7 @@ Features include:
 
 ## 📸 Screenshots
 
-| Board View | Quick Demo |
-|--------------------|--------------|
-| ![](screenshots/board.png) | ![](screenshots/demo.gif) |
+![](screenshots/demo.gif)
 
 ## 🛠️ Running the macOS App
 
