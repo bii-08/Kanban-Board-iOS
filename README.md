@@ -39,9 +39,11 @@ Features include:
 
 ---
 
-## 📸 Screenshots
+## 📸 Demo
 
-![](screenshots/demo.gif)
+Here’s a quick look at the Kanban Board macOS app in action:
+
+![Demo GIF](https://github.com/bii-08/Kanban-Board-iOS/raw/main/KanbanBoard/Screenshots/demo.gif)
 
 ## 🛠️ Running the macOS App
 
