@@ -53,4 +53,16 @@ Here’s a quick look at the Kanban Board macOS app in action:
 
 Tested on macOS 14 Sonoma.
 
+## 🔎 Credits
+
+- **Created by** [Tam Luu](https://github.com/bii-08)
+
+## 📱 Contact
+
+Have a project? DM me at 👇
+
+Drop a mail to: luuthithanhtam08@gmail.com
+
+![Static Badge](https://img.shields.io/badge/Built_with_%F0%9F%92%93-blue)
+
 ---
