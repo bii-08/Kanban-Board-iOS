@@ -14,7 +14,7 @@ import SwiftData
 nonisolated
 final class Card: Codable, Identifiable, Hashable, Transferable, Sendable {
     
-    var id: UUID
+    @Attribute(.unique) var id: UUID
     var title: String
     var tag: String?
     var dueDate: Date?

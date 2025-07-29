@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AppKit
 
 struct CardEditFormView: View {
     @Environment(\.dismiss) var dismiss
@@ -18,7 +19,6 @@ struct CardEditFormView: View {
     @State var dueDate: Date?
     let onSave: (String, String?, Date?, Color) -> Void
     
-    @State private var showColorPicker = false
     @State private var selectedColor: Color = .blue
     
     init(originalCard: Card, onSave: @escaping (String, String?, Date?, Color) -> Void) {
@@ -56,11 +56,13 @@ struct CardEditFormView: View {
                         if hasChanged() {
                             onSave(title, tag, dueDate, selectedColor)
                         }
+                        NSColorPanel.shared.close()
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
+                        NSColorPanel.shared.close()
                         dismiss()
                     }
                 }
@@ -69,7 +71,6 @@ struct CardEditFormView: View {
     }
     
     private func hasChanged() -> Bool {
-        
         if originalCard.title != title || originalCard.dueDate != dueDate || originalCard.tagColor != selectedColor ||
             originalCard.tag != tag {
             return true
