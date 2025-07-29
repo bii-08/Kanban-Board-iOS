@@ -41,7 +41,7 @@ Features include:
 
 ## 📸 Screenshots
 
-| Board View | Quick Demo (sorry about the fuzzy GIF) |
+| Board View | Quick Demo |
 |--------------------|--------------|
 | ![](screenshots/board.png) | ![](screenshots/demo.gif) |
 
